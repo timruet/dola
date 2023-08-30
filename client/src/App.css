@@ -1,0 +1,49 @@
+/*-------------------App--------------------*/
+
+.Link{
+  text-decoration:none;
+}
+
+div#vocabTable{
+  margin: 5%;
+}
+
+
+
+/*-------------------Home--------------------*/
+
+#home{
+  background-color: black;
+}
+
+#home-title{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#title{
+  font-size: 164px;
+  padding: none;
+  margin: none;
+  border: none;
+}
+
+#title-description{
+  font-size: 24px;
+  padding: none;
+  margin: none;
+  border: none;
+}
+
+/*-------------------Construction--------------------*/
+
+/*#whitespace{
+  width: 70%;
+  height:auto;
+  background-color: black;
+}*/
