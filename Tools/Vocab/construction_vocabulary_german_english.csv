@@ -1,0 +1,105 @@
+id,german,english
+1,Werkzeug,Tool
+2,Materialien,Materials
+3,Messen,Measuring
+4,Schneiden,Cutting
+5,Bohren,Drilling
+6,Sägen,Sawing
+7,Hämmern,Hammering
+8,Schrauben,Screwing
+9,Nageln,Nailing
+10,Kleben,Gluing
+11,Schleifen,Grinding
+12,Lackieren,Painting
+13,Schweißen,Welding
+14,Löten,Soldering
+15,Elektrik,Electrical
+16,Sanitär,Plumbing
+17,Heizung,Heating
+18,Klimaanlage,Air conditioning
+19,Abfluss,Drain
+20,Rohrleitung,Pipeline
+21,Isolierung,Insulation
+22,Fundament,Foundation
+23,Dach,Roof
+24,Wand,Wall
+25,Boden,Floor
+26,Decke,Ceiling
+27,Fenster,Window
+28,Tür,Door
+29,Treppe,Stairs
+30,Zaun,Fence
+31,Geländer,Railing
+32,Treppengeländer,Stair railing
+33,Leiter,Ladder
+34,Leiterplatte,Circuit board
+35,Steckdose,Outlet
+36,Kabel,Cable
+37,Verdrahtung,Wiring
+38,Steckdosenleiste,Power strip
+39,Schalter,Switch
+40,Sicherung,Fuse
+41,Wasserhahn,Faucet
+42,Waschbecken,Sink
+43,Toilette,Toilet
+44,Dusche,Shower
+45,Badewanne,Bathtub
+46,Spüle,Drain
+47,Heizkörper,Radiator
+48,Kessel,Boiler
+49,Pumpe,Pump
+50,Thermostat,Thermostat
+51,Ventil,Valve
+52,Klimagerät,Air conditioner
+53,Wärmedämmung,Insulation
+54,Ziegelstein,Brick
+55,Zement,Cement
+56,Beton,Concrete
+57,Mauerwerk,Masonry
+58,Holz,Wood
+59,Metall,Metal
+60,Glas,Glass
+61,Kunststoff,Plastic
+62,Fliese,Tile
+63,Schraube,Screw
+64,Mutter,Nut
+65,Bolzen,Bolt
+66,Gewinde,Thread
+67,Nägel,Nails
+68,Dübel,Anchor
+69,Dichtungsmasse,Sealant
+70,Sägeblatt,Saw blade
+71,Bohrer,Drill bit
+72,Schraubendreher,Screwdriver
+73,Zange,Pliers
+74,Hammer,Hammer
+75,Schraubenschlüssel,Wrench
+76,Schleifpapier,Sandpaper
+77,Handschuhe,Gloves
+78,Schutzbrille,Safety goggles
+79,Ohrschutz,Hearing protection
+80,Schutzmaske,Respirator mask
+81,Arbeitskleidung,Workwear
+82,Arbeitshandschuhe,Work gloves
+83,Schutzhaube,Safety cap
+84,Leiterwagen,Trolley
+85,Schubkarre,Wheelbarrow
+86,Bauplan,Blueprint
+87,Baustelle,Construction site
+88,Werkstatt,Workshop
+89,Lager,Warehouse
+90,Abfallentsorgung,Waste disposal
+91,Sicherheit,Safety
+92,Gefahr,Hazard
+93,Notausgang,Emergency exit
+94,Feuerlöscher,Fire extinguisher
+95,Erste Hilfe,First aid
+96,Elektriker,Electrician
+97,Klempner,Plumber
+98,Zimmermann,Carpenter
+99,Maurer,Mason
+100,Maler,Painter
+122,Abrissbirne,Wrecking ball
+123,Bagger,Excavator
+124,Betonmischer,Concrete mixer
+125,Kran,Crane
