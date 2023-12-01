@@ -3,6 +3,7 @@ import { resolve } from 'path';
 
 const {Pool, Client} = pkg;
 
+
 async function createTable(){
     const client = new Client({
     host: 'localhost',
@@ -10,10 +11,9 @@ async function createTable(){
     })
 
     await client.connect();
-    await client.query(`CREATE TABLE Construction_Vocabulary_German_English(
-        VocabID int NOT NULL PRIMARY KEY,
-        German varchar,
-        English varchar
+    await client.query(`CREATE TABLE user_profiles(
+        email varchar NOT NULL PRIMARY KEY,
+        password varchar
         )`);
 
 }
@@ -43,15 +43,37 @@ async function getTable(tablename){
     return res.rows;
 }
 
-async function getRow(username, [password]){
+// async function getRow(username, [password]){
+//     const pool = new Pool({
+//     host: 'localhost',
+//     database: 'dola_db',
+//     })
+//     await pool.connect();
+
+//     const res =  await pool.query(`SELECT * FROM ${userdata} WHERE username = ? AND password + ?`, [username, password ]);
+//     return res.rows;
+// }
+
+async function getUser(userdata){
     const pool = new Pool({
     host: 'localhost',
     database: 'dola_db',
     })
     await pool.connect();
 
-    const res =  await pool.query(`SELECT * FROM ${userdata} WHERE username = ? AND password + ?`, [username, password ]);
+    const res =  await pool.query(`SELECT * FROM user_profiles WHERE email = '${userdata.email}' AND password = '${userdata.password}';`);
+    console.log(res);
     return res.rows;
 }
 
-export{getTable};
+async function addUser(userdata){
+    const pool = new Pool({
+    host: 'localhost',
+    database: 'dola_db',
+    })
+    await pool.connect();
+
+    const res =  await pool.query(`INSERT INTO user_profiles(email, password) VALUES('${userdata.email}','${userdata.password}');`);
+}
+
+export{getTable, addUser, getUser};

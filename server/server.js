@@ -4,7 +4,7 @@ import  express from'express';
 import * as path from 'path';     
 import bodyParser from "body-parser"; 
 import { fileURLToPath } from 'url';
-import {getTable} from './database.js'
+import {getTable, addUser, getUser} from './database.js'
 import cors from 'cors';
 import session from 'express-session';
 
@@ -22,7 +22,12 @@ app.use(cors());
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 
-
+app.options('*', (req,res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS', 'POST');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+});
 
 // app.get('/home', function(request, response) {
 // 	// If the user is loggedin
@@ -36,29 +41,34 @@ app.use(cors());
 // 	response.end();
 // });
 
-// app.post('/auth', function(request, response) {
-// 	// Capture the input fields
-// 	let username = request.body.username;
-// 	let password = request.body.password;
-// 	// Ensure the input fields exists and are not empty
-// 	if (username && password) {
-// 		// Execute SQL query that'll select the account from the database based on the specified username and password
-// 		result = getRow(username, password)
-// 		if (results.length > 0) {
-// 			// Authenticate the user
-// 			request.session.loggedin = true;
-// 			request.session.username = username;
-// 			// Redirect to home page
-// 			response.redirect('/home');
-// 		} else {
-// 			response.send('Incorrect Username and/or Password!');
-// 		}			
-// 		response.end();
-//   } else {
-// 		response.send('Please enter Username and Password!');
-// 		response.end();
-// 	}
-// });
+app.post('/api/login', async function(request, response) {
+	// Capture the input fields
+	const userdata = {email: request.body.email, password: request.body.password}
+	// Ensure the input fields exists and are not empty
+	if (userdata.email && userdata.password) {
+		// Execute SQL query that'll select the account from the database based on the specified email and password
+		const result = await getUser(userdata);
+		if (result.length > 0) {
+			// Authenticate the user
+			request.session.loggedin = true;
+			request.session.email = email;
+			// Redirect to profile page
+			response.redirect('/profile');
+		} else {
+			response.send('Incorrect email and/or Password!');
+		}			
+		response.end();
+  } else {
+		response.send('Please enter email and Password!');
+		response.end();
+	}
+});
+
+app.post('/api/register', function(request, response){
+  addUser(request.body);
+  request.session.loggedin = true;
+  response.end();
+})
 
 app.get('/api/table', async (req, res) => {
   const domain = req.query.domain;
