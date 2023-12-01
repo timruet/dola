@@ -14,7 +14,8 @@ import './dist/output.css';
 import Home from './Pages/Home';
 import Vocabulary from './Pages/Vocabulary';
 import Quizz from './Pages/Quizz';
-import Profile from './Pages/Profile';
+import Login from './Pages/Login';
+import Register from './Pages/Register';
 
 
 function App() {
@@ -33,7 +34,8 @@ function App() {
         <Route path="/domain/construction" element={<Vocabulary domain="construction" />} />
         <Route path="/domain/construction/quizz" element={<Quizz domain="construction" />} />
         <Route path="/domain/eldercare/quizz" element={<Quizz domain="eldercare" />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </>
   )
