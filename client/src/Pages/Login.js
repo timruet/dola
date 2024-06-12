@@ -9,7 +9,7 @@ function isEmpty(obj) {
 
 export default function Login(){
     const [error, setError] = useState({ email: null, password: null});
-    const [state, setState] = useState({ email: '', password: ''});
+    const [loginData, setLoginData] = useState({ email: '', password: ''});
 
     const validateEmail = (email) => {
         return String(email)
@@ -28,15 +28,17 @@ export default function Login(){
         }
 
         if (!isEmpty(error)){
-            setState({ email: event.target.email.value, password: event.target.password.value })
+            setLoginData({ email: event.target.email.value, password: event.target.password.value })
         }
-        const res = await fetch('http://localhost:8000/api/login', { mode: "cors", headers: {'Content-Type': 'application/json'}, method: 'post', body: JSON.stringify(state)});
-        if(!res.ok) {
-            throw new Error(res.status);
-        }
-        else {
-            redirect("/login");
-        }
+
+        console.log(loginData);
+        // const res = await fetch('http://localhost:8000/api/login', { mode: "cors", headers: {'Content-Type': 'application/json'}, method: 'post', body: JSON.stringify(loginData)});
+        // if(!res.ok) {
+        //     throw new Error(res.status);
+        // }
+        // else {
+        //     redirect("/login");
+        // }
     }
 
 
