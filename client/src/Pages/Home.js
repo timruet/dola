@@ -5,16 +5,6 @@ import { useState } from 'react';
 import { TrashIcon } from '@heroicons/react/16/solid'
 
 export default function Home() {
-    // const [username, setUsername] = useState();
-
-    // // useEffect(()=>{ 
-    // //     async function fetchData() {
-    // //       const res = await fetch(`http://localhost:8000/api/home`);
-    // //       const data = await res.json();
-    // //       setUsername(data);
-    // //     }
-    // //     fetchData();
-    // //   },[]);
 
     return (
         <>

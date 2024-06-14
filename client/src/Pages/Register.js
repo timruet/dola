@@ -1,6 +1,6 @@
 import '../dist/output.css';
 import { useState } from 'react';
-import { redirect } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 
 function isEmpty(obj) {
@@ -9,7 +9,8 @@ function isEmpty(obj) {
 
 export default function Register(){
     const [error, setError] = useState({ email: null, password: null , confirmedPassword: null});
-    const [state, setState] = useState({ email: '', password: ''});
+    const [loginData, setLoginData] = useState({ email: '', password: ''});
+    const navigate = useNavigate();
 
     const validateEmail = (email) => {
         return String(email)
@@ -36,16 +37,23 @@ export default function Register(){
         }
         
         if (!isEmpty(error)){
-            setState({ email: event.target.email.value, password: event.target.password.value })
+            setLoginData({ email: event.target.email.value, password: event.target.password.value })
         }
-        const res = await fetch('http://localhost:8000/api/register', { mode: "cors", headers: {'Content-Type': 'application/json'}, method: 'post', body: JSON.stringify(state)});
-        // const requestConfig = { header: {'Content-Type': 'application/json'}, method: 'post', body: JSON.stringify(state) };
-        // const res = await fetch('http://localhost:8000/api/register', requestConfig);
-        if(!res.ok) {
-            throw new Error(res.status);
+        //setState is asynchronous but doesnt return a promise or anything else and thus await doesnt always work
+        const userdata = { email: event.target.email.value, password: event.target.password.value };
+        let res = await fetch('http://localhost:8000/api/register', { mode: "cors", headers: {'Content-Type': 'application/json'}, method: 'post', body: JSON.stringify(userdata)});
+        console.log(res.status);
+        if(res.status == 200) {
+            res = await res.json();
+            console.log(res);
+            setError({ email: res, password: error.password, confirmedPassword: error.confirmedPassword });
+        }
+        else if(res.status == 201){
+            console.log(res.status);
+            navigate('/login');
         }
         else {
-            redirect("/login");
+            throw new Error(res.status);
         }
     }
 
@@ -88,7 +96,7 @@ export default function Register(){
                                 </div>
                                 <button type="submit" className="w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
                                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                                    Already have an account? <a href="/profile" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
+                                    Already have an account? <a href="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
                                 </p>
                             </form>
                         </div>

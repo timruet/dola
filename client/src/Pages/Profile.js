@@ -1,9 +1,11 @@
 import '../dist/output.css';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
     const [error, setError] = useState({ email: null, password: null });
     const [state, setState] = useState({ email: '', password: '', });
+    const navigate = useNavigate();
     // const [username, setUsername] = useState();
 
     // useEffect(() => {
@@ -39,7 +41,13 @@ export default function Profile() {
         console.log(error);
 
         const res = await fetch('http://localhost:8000/api/login', { method: 'post', body: JSON.stringify(state) })
-        const data = await res.json();
+        if(!res.ok) {
+            throw new Error(res.status);
+        }
+        else {
+            console.log('hello');
+            navigate('/home');
+        }
     }
     console.log(error);
 

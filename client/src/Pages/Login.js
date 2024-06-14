@@ -1,6 +1,8 @@
 import '../dist/output.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authService } from '../authService';
+import { useDispatch } from 'react-redux';
 
 
 function isEmpty(obj) {
@@ -9,7 +11,6 @@ function isEmpty(obj) {
 
 export default function Login(){
     const [error, setError] = useState({ email: null, password: null});
-    const [loginData, setLoginData] = useState({ email: '', password: ''});
     const navigate = useNavigate();
 
     const validateEmail = (email) => {
@@ -29,19 +30,11 @@ export default function Login(){
         }
 
         if (!isEmpty(error)){
-            setLoginData({ email: event.target.email.value, password: event.target.password.value })
-        }
-
-        const res = await fetch('http://localhost:8000/api/login', { mode: "cors", headers: {'Content-Type': 'application/json'}, method: 'post', body: JSON.stringify(loginData)});
-        if(!res.ok) {
-            throw new Error(res.status);
-        }
-        else {
-            console.log('hello');
+            const userdata = { email: event.target.email.value, password: event.target.password.value }
+            await authService.login(userdata);
             navigate('/home');
         }
     }
-
 
     return(
         <>
