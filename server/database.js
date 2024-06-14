@@ -62,7 +62,7 @@ async function getUser(userdata){
     await pool.connect();
 
     const res =  await pool.query(`SELECT * FROM user_profiles WHERE email = '${userdata.email}' AND password = '${userdata.password}';`);
-    return res.rows;
+    return res;
 }
 
 async function addUser(userdata){
@@ -73,6 +73,7 @@ async function addUser(userdata){
     await pool.connect();
 
     const res =  await pool.query(`INSERT INTO user_profiles(email, password) VALUES('${userdata.email}','${userdata.password}');`);
+    return res;
 }
 
 export{getTable, addUser, getUser};

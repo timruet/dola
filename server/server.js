@@ -14,17 +14,19 @@ import { ok } from 'assert';
 import { initPassport } from './auth.js';
 
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 // app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(express.json())
+app.use(cors('*'));
 app.use(session({
   secret: 'dola',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: true }
+  //cookie: { secure: true }
 }));
 initPassport(app);
 
@@ -50,11 +52,26 @@ app.options('*', (req, res) => {
 
 app.post('/api/login', passport.authenticate('local', { failureRedirect: 'http://localhost:3000/home' }),
   async function (req, res) {
-    // Capture the input fields
-    if(req.user){
+    if (req.user) {
       res.sendStatus(200);
     }
   });
+
+app.post('/api/loggedIn', async function (req, res) {
+  if (req.user) {
+    res.sendStatus(200);
+  }
+  else{
+    res.status(100).send('No user logged in');
+  }
+});
+
+app.post('api/logout', function (req, res, next) {
+  req.logout(function (err) {
+    if (err) { return next(err); }
+    res.status(200).send('Successfully logged out');
+  });
+});
 // Ensure the input fields exists and are not empty
 // 	if (userdata.email && userdata.password) {
 // 		// Execute SQL query that'll select the account from the database based on the specified email and password
@@ -76,11 +93,20 @@ app.post('/api/login', passport.authenticate('local', { failureRedirect: 'http:/
 // });
 
 
-app.post('/api/register', function (request, response) {
-  // addUser(request.body);
-  // request.session.loggedin = true;
-  // response.end();
-})
+app.post('/api/register', async function (req, res) {
+  const user = { email: req.body.email, password: req.body.password };
+  let userdb = await getUser(user);
+  userdb = userdb.rowCount;
+  if (userdb == 1) {
+    res.status = 200;
+    res.json('Email already in use');
+  }
+  else {
+    if(addUser(user)){
+    res.sendStatus(201);
+    }  
+  };
+});
 
 app.get('/api/table', async (req, res) => {
   const domain = req.query.domain;
