@@ -7,36 +7,46 @@ import { useDispatch } from 'react-redux';
 
 function isEmpty(obj) {
     return Object.keys(obj).length === 0;
-  }
+}
 
-export default function Login(){
-    const [error, setError] = useState({ email: null, password: null});
+export default function Login() {
+    const [error, setError] = useState({ email: null, password: null });
     const navigate = useNavigate();
 
     const validateEmail = (email) => {
         return String(email)
-          .toLowerCase()
-          .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          );
-      };
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
 
 
     async function handleSubmit(event) {
         event.preventDefault();
-        
+
         if (!validateEmail(event.target.email.value)) {
-            setError({ email: 'Invalid Email', password: error.password});
+            setError({ email: 'Invalid Email', password: error.password });
         }
 
-        if (!isEmpty(error)){
+        if (!isEmpty(error)) {
             const userdata = { email: event.target.email.value, password: event.target.password.value }
-            await authService.login(userdata);
-            navigate('/home');
+            const res = await fetch('http://localhost:8000/api/login', { credentials: 'include', mode: "cors", headers: { 'Content-Type': 'application/json' }, method: 'post', body: JSON.stringify(userdata) });
+            const user = await res.json();
+            if (!res.ok) {
+                throw new Error(res.status);
+            }
+            else if(user.email === userdata.email){
+                navigate('/home');
+            }
+            else{
+                console.log('User not found');
+            }
+            
         }
     }
 
-    return(
+    return (
         <>
             <section className="bg-gray-50 dark:bg-gray-900">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

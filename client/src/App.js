@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { authService } from './authService';
+import Cookies from 'js-cookie';
 
 
 import './dist/output.css';
@@ -45,16 +46,16 @@ function App() {
 
 function NavigationBar() {
   const navigate = useNavigate();
+  authService.auth();
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth.user);
 
-  async function handleClick(){
-    await authService.logout();
+  async function handleClick() {
+    authService.logout();
     navigate('/home');
   }
-  console.log(isAuthenticated);
-  if (isAuthenticated !== true) {
+  if (!isAuthenticated) {
     return (
       <>
         <nav className="bg-gray-800 shadow-md top-0 left-0 w-screen">
