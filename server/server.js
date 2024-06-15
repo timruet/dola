@@ -21,18 +21,19 @@ const app = express();
 // app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(bodyParser.json());
 app.use(express.json())
-app.use(cors('*'));
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(session({
+  name: 'auth',
   secret: 'dola',
   resave: false,
   saveUninitialized: false,
-  //cookie: { secure: true }
+  cookie: { secure: false}
 }));
-initPassport(app);
+//initPassport(app);
 
 
 app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'localhost:3000');
   // res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS', 'POST');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -50,27 +51,53 @@ app.options('*', (req, res) => {
 // 	response.end();
 // });
 
-app.post('/api/login', passport.authenticate('local', { failureRedirect: 'http://localhost:3000/home' }),
-  async function (req, res) {
-    if (req.user) {
-      res.sendStatus(200);
-    }
-  });
+// app.post('/api/login', passport.authenticate('local', { failureRedirect: 'http://localhost:3000/home' }),
+//   async function (req, res) {
+//     if (req.user) {
+//       res.sendStatus(200);
+//     }
+//   });
 
-app.post('/api/loggedIn', async function (req, res) {
-  if (req.user) {
-    res.sendStatus(200);
+app.post('/api/login', async function(req, res){
+  const userdata = {email: req.body.email, password: req.body.password};
+  let user = await getUser(userdata);
+  user = user.rows[0];
+  if(user.email == userdata.email && user.password == userdata.password){
+    req.session.user = user;
+    req.session.isLoggedIn = true;
+    res.json(user);
   }
   else{
-    res.status(100).send('No user logged in');
+    res.json({});
   }
-});
+})
 
-app.post('api/logout', function (req, res, next) {
-  req.logout(function (err) {
-    if (err) { return next(err); }
-    res.status(200).send('Successfully logged out');
-  });
+app.post('/api/auth', async function(req, res){
+  if (!req.session.isLoggedIn){
+    res.send(false)
+  }
+  else{
+    res.send(true);
+  }
+
+})
+
+// app.post('/api/loggedIn', async function (req, res) {
+//   if (req.user) {
+//     res.sendStatus(200);
+//   }
+//   else{
+//     res.status(100).send('No user logged in');
+//   }
+// });
+
+app.post('/api/logout', function (req, res) {
+  // req.logout(function (err) {
+  //   if (err) { return next(err); }
+  //   res.status(200).send('Successfully logged out');
+  // });
+  req.session.destroy();
+  res.sendStatus(200);
 });
 // Ensure the input fields exists and are not empty
 // 	if (userdata.email && userdata.password) {
