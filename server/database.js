@@ -4,17 +4,14 @@ import { resolve } from 'path';
 const {Pool, Client} = pkg;
 
 
-async function createTable(){
-    const client = new Client({
+async function createTable(userid){
+    const pool = new Client({
     host: 'localhost',
     database: 'dola_db',
     })
 
-    await client.connect();
-    await client.query(`CREATE TABLE user_profiles(
-        email varchar NOT NULL PRIMARY KEY,
-        password varchar
-        )`);
+    await pool.connect();
+    await pool.query(`CREATE TABLE user_${userid}(domains varchar(255));`);
 
 }
 
@@ -43,6 +40,54 @@ async function getTable(tablename){
     return res.rows;
 }
 
+async function createUserDomains(userid){
+    const pool = new Pool({
+    host: 'localhost',
+    database: 'dola_db',
+    })
+    await pool.connect();
+
+    await pool.query(`CREATE TABLE user_${userid}(domains varchar(255));`);
+    await pool.query(`INSERT INTO user_${userid}(domains) VALUES('Eldercare'), ('Construction');`);
+    const res =  await pool.query(`SELECT * FROM user_${userid};`);
+    return res.rows;
+}
+
+async function addUserDomains(userid, domain){
+    const pool = new Pool({
+    host: 'localhost',
+    database: 'dola_db',
+    })
+    await pool.connect();
+    
+    await pool.query(`INSERT INTO user_${userid}(domains) VALUES('${domain}');`);
+    const res = await pool.query(`SELECT * FROM user_${userid}`);
+    return res;
+}
+
+async function deleteUserDomains(userid, domain){
+    const pool = new Pool({
+    host: 'localhost',
+    database: 'dola_db',
+    })
+    await pool.connect();
+    
+    await pool.query(`DELETE FROM user_${userid} WHERE domains='${domain}';`);
+    const res = await pool.query(`SELECT * FROM user_${userid}`);
+    return res;
+}
+
+async function getUserDomains(userid){
+    const pool = new Pool({
+    host: 'localhost',
+    database: 'dola_db',
+    })
+    await pool.connect();
+
+    const res = await pool.query(`SELECT domains FROM user_${userid}`);
+    return res;
+}
+
 // async function getRow(username, [password]){
 //     const pool = new Pool({
 //     host: 'localhost',
@@ -61,7 +106,7 @@ async function getUser(userdata){
     })
     await pool.connect();
 
-    const res =  await pool.query(`SELECT * FROM user_profiles WHERE email = '${userdata.email}' AND password = '${userdata.password}';`);
+    const res =  await pool.query(`SELECT * FROM users WHERE email = '${userdata.email}' AND password = '${userdata.password}';`);
     return res;
 }
 
@@ -72,8 +117,9 @@ async function addUser(userdata){
     })
     await pool.connect();
 
-    const res =  await pool.query(`INSERT INTO user_profiles(email, password) VALUES('${userdata.email}','${userdata.password}');`);
-    return res;
+    const res =  await pool.query(`INSERT INTO users(email, password) VALUES('${userdata.email}','${userdata.password}');`);
+    const user =  await pool.query(`SELECT * FROM users WHERE email = '${userdata.email}' AND password = '${userdata.password}';`);
+    return user;
 }
 
-export{getTable, addUser, getUser};
+export{getTable, addUser, getUser, createUserDomains, addUserDomains, getUserDomains, deleteUserDomains};

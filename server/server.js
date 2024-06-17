@@ -4,7 +4,7 @@ import express from 'express';
 import * as path from 'path';
 import bodyParser from "body-parser";
 import { fileURLToPath } from 'url';
-import { getTable, addUser, getUser } from './database.js'
+import { getTable, addUser, getUser, addUserDomains, createUserDomains, getUserDomains, deleteUserDomains } from './database.js'
 import cors from 'cors';
 import session from 'express-session';
 import passport from "passport";
@@ -29,7 +29,6 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: false}
 }));
-//initPassport(app);
 
 
 app.options('*', (req, res) => {
@@ -39,24 +38,6 @@ app.options('*', (req, res) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type');
 });
 
-// app.get('/home', function(request, response) {
-// 	// If the user is loggedin
-// 	if (request.session.loggedin) {
-// 		// Output username
-// 		response.send('Welcome back, ' + request.session.username + '!');
-// 	} else {
-// 		// Not logged in
-// 		response.send('Please login to view this page!');
-// 	}
-// 	response.end();
-// });
-
-// app.post('/api/login', passport.authenticate('local', { failureRedirect: 'http://localhost:3000/home' }),
-//   async function (req, res) {
-//     if (req.user) {
-//       res.sendStatus(200);
-//     }
-//   });
 
 app.post('/api/login', async function(req, res){
   const userdata = {email: req.body.email, password: req.body.password};
@@ -73,66 +54,88 @@ app.post('/api/login', async function(req, res){
 })
 
 app.post('/api/auth', async function(req, res){
-  if (!req.session.isLoggedIn){
-    res.send(false)
+  if (req.session.isLoggedIn){
+    res.json({user: req.session.user, isAuthenticated: req.session.isLoggedIn});
   }
   else{
-    res.send(true);
+    res.json({user: null, isAuthenticated: false});
   }
-
 })
 
-// app.post('/api/loggedIn', async function (req, res) {
-//   if (req.user) {
-//     res.sendStatus(200);
-//   }
-//   else{
-//     res.status(100).send('No user logged in');
-//   }
-// });
-
 app.post('/api/logout', function (req, res) {
-  // req.logout(function (err) {
-  //   if (err) { return next(err); }
-  //   res.status(200).send('Successfully logged out');
-  // });
   req.session.destroy();
   res.sendStatus(200);
 });
-// Ensure the input fields exists and are not empty
-// 	if (userdata.email && userdata.password) {
-// 		// Execute SQL query that'll select the account from the database based on the specified email and password
-// 		const result = await getUser(userdata);
-// 		if (result.length > 0) {
-// 			// Authenticate the user
-// 			request.session.loggedin = true;
-// 			request.session.email = email;
-// 			// Redirect to profile page
-// 			response.redirect('/profile');
-// 		} else {
-// 			response.send('Incorrect email and/or Password!');
-// 		}			
-// 		response.end();
-//   } else {
-// 		response.send('Please enter email and Password!');
-// 		response.end();
-// 	}
-// });
+
 
 
 app.post('/api/register', async function (req, res) {
-  const user = { email: req.body.email, password: req.body.password };
-  let userdb = await getUser(user);
-  userdb = userdb.rowCount;
-  if (userdb == 1) {
+  const userdata = { email: req.body.email, password: req.body.password };
+  if (getUser(userdata).rowCount > 0) {
     res.status = 200;
     res.json('Email already in use');
   }
   else {
-    if(addUser(user)){
-    res.sendStatus(201);
+    const user = await addUser(userdata);
+    if(user){
+      res.status(201).send(user.rows[0]);
     }  
   };
+});
+
+app.post('/api/addUserDomains', async function (req, res) {
+  const userid = req.body.userid;
+  const domain = req.body.domain;
+  const query = await addUserDomains(userid, domain);
+  if(query.rowCount > 0){
+    let domainsList = [];
+    query.rows.map((domain) => {
+      domainsList.push(domain.domains);});
+    res.json(domainsList);
+  }
+  else {
+    res.send(false);
+  }
+});
+
+app.post('/api/deleteUserDomains', async function (req, res) {
+  const userid = req.body.userid;
+  const domain = req.body.domain;
+  const query = await deleteUserDomains(userid, domain);
+  if(query != null){
+    let domainsList = [];
+    query.rows.map((domain) => {
+      domainsList.push(domain.domains);});
+    res.json(domainsList);
+  }
+  else {
+    res.send(false);
+  }
+});
+
+app.post('/api/createUserDomains', async function (req, res) {
+  const id = req.body.userid;
+  const query = await createUserDomains(id);
+  if(query){
+    res.json(query);
+  }
+  else {
+    res.send(false);
+  }
+});
+
+app.post('/api/getUserDomains', async function (req, res) {
+  const userid = req.body.userid;
+  const query = await getUserDomains(userid);
+  if(query.rowCount > 1){
+    let domainsList = [];
+    query.rows.map((domain) => {
+      domainsList.push(domain.domains);});
+    res.json(domainsList);
+  }
+  else {
+    res.send(false);
+  }
 });
 
 app.get('/api/table', async (req, res) => {

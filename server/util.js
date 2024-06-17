@@ -25,6 +25,9 @@ async function findByIdEnglish (domain, id) {
   }
 }
 
+const compareArrays = (a, b) =>
+  a.length === b.length && a.every((element, index) => element === b[index]);
 
 
-export{findByIdGerman, findByIdEnglish, getTableByDomain};
+
+export{findByIdGerman, findByIdEnglish, getTableByDomain, compareArrays};
