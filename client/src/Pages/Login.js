@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../authService';
 import { useDispatch } from 'react-redux';
+import { useSelector} from 'react-redux'
 
 
 function isEmpty(obj) {
@@ -12,6 +13,7 @@ function isEmpty(obj) {
 export default function Login() {
     const [error, setError] = useState({ email: null, password: null });
     const navigate = useNavigate();
+    const user = useSelector((state) => state.auth.user);
 
     const validateEmail = (email) => {
         return String(email)
@@ -30,19 +32,26 @@ export default function Login() {
         }
 
         if (!isEmpty(error)) {
-            const userdata = { email: event.target.email.value, password: event.target.password.value }
-            const res = await fetch('http://localhost:8000/api/login', { credentials: 'include', mode: "cors", headers: { 'Content-Type': 'application/json' }, method: 'post', body: JSON.stringify(userdata) });
-            const user = await res.json();
-            if (!res.ok) {
-                throw new Error(res.status);
-            }
-            else if(user.email === userdata.email){
-                navigate('/home');
-            }
-            else{
-                console.log('User not found');
-            }
-            
+            let userdata = { email: event.target.email.value, password: event.target.password.value }
+            authService.login(userdata);
+            navigate('/home');
+            //let user = await fetch('http://localhost:8000/api/login', { credentials: 'include', mode: "cors", headers: { 'Content-Type': 'application/json' }, method: 'post', body: JSON.stringify(userdata) });
+            //user = await user.json();
+            // let domains = await fetch('http://localhost:8000/api/createUserDomains', { credentials: 'include', mode: "cors", headers: { 'Content-Type': 'application/json' }, method: 'post', body: JSON.stringify(user) });
+            // domains = await domains.json();
+            // console.log(domains);
+            // if (!user || !domains) {
+            //     throw new Error(404);
+            // }
+            // else if (user.email === userdata.email) {
+            //     domainService.setDomain(domains);
+                
+                
+            // }
+            // else {
+            //     console.log('User not found');
+            // }
+
         }
     }
 

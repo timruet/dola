@@ -17,16 +17,16 @@ function Flashcard({ domain }) {
     const [vocabEnglish, setVocabEnglish] = useState('');
     const [mode, setMode] = useState(0);
 
-    useEffect(() => {
-        async function fetchData() {
-            const res = await fetch(`http://localhost:8000/api/quizz?id=${vocabID}&domain=${domain}`);
-            const data = await res.json();
-            setVocabID(vocabID + 1);
-            setVocabGerman(data.german);
-            setVocabEnglish(data.english);
-        }
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         const res = await fetch(`http://localhost:8000/api/quizz?id=${vocabID}&domain=${domain}`);
+    //         const data = await res.json();
+    //         setVocabID(vocabID + 1);
+    //         setVocabGerman(data.german);
+    //         setVocabEnglish(data.english);
+    //     }
+    //     fetchData();
+    // }, []);
 
     async function handleClick() {
         const res = await fetch(`http://localhost:8000/api/quizz?id=${vocabID}&domain=${domain}`);

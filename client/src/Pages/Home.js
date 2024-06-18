@@ -2,7 +2,11 @@ import '../dist/output.css';
 import volcano from "../images/volcano-cropped.png"
 
 import { useState } from 'react';
-import { TrashIcon } from '@heroicons/react/16/solid'
+import { TrashIcon } from '@heroicons/react/16/solid';
+import { useSelector, useDispatch } from 'react-redux'
+import { authService } from '../authService';
+import { domainService } from '../domainService';
+import { vocabService } from '../vocabService';
 
 export default function Home() {
 
@@ -25,18 +29,35 @@ export default function Home() {
 
 
 function DomainsSelect() {
-    const [domains, setDomains] = useState(["Construction", "Eldercare"]);
 
-    function handleSubmit(event) {
+    const user = useSelector((state) => state.auth.user);
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    let userid = null;
+    if(isAuthenticated){
+        userid = user.id
+    }
+    const domains = useSelector((state) => state.domain.domains);
+
+    async function handleSubmit(event) {
         event.preventDefault();
-        const input = event.target[0].value;
-        setDomains(domains.concat(input));
+        const domain = event.target[0].value;
+        if(isAuthenticated){
+            domainService.addDomain(userid, domain);
+            vocabService.setVocabulary(userid, domain);
+        }
+        else{
+            alert('You need to be logged in to add a new domain');
+        }    
     }
 
     function handleRemove(event, domain) {
         event.preventDefault();
-        const newDomains = domains.filter((item) => item !== domain);
-        setDomains(newDomains);
+        if(isAuthenticated){
+            domainService.deleteDomain(userid, domain);
+        }
+        else{
+            alert('You need to be logged in to delete a domain');
+        }  
     }
 
     return (
@@ -65,7 +86,7 @@ function DomainsSelect() {
                     {domains.map(domain => (
                         <div key={domain} className="flex py-2">
                             <span className="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
-                            <a href={`domain/${domain}`.toLowerCase()} className="text-gray-700 hover:text-blue-400">
+                            <a href={`domain/${domain}/vocabulary`.toLowerCase()} className="text-gray-700 hover:text-blue-400">
                                 <span className="relative top-[2px] w-fit font-medium px-2">{domain}</span>
                             </a>
                             <button type="button" onClick={(event) => handleRemove(event, domain)} className="top-[2px] ml-auto cursor-pointer text-gray-700 hover:text-blue-400 rounded-md px-1 py-1"><TrashIcon className="h-[16px] w-[16px]" /></button>

@@ -5,12 +5,16 @@ import { store } from './store'
 
 export const authService = {
     async login(userdata) {
-        const res = await fetch('http://localhost:8000/api/login', { credentials: 'include', mode: "cors", headers: { 'Content-Type': 'application/json' }, method: 'post', body: JSON.stringify(userdata) });
+        let res = await fetch('http://localhost:8000/api/login', { credentials: 'include', mode: "cors", headers: { 'Content-Type': 'application/json' }, method: 'post', body: JSON.stringify(userdata) });
         if (!res.ok) {
             throw new Error(res.status);
         }
+        else{
+            res = await res.json();
+            store.dispatch(loginSuccess(res));
+        }
         // Dispatch the loginSuccess action with the user data
-        store.dispatch(loginSuccess(userdata));
+
 
         return userdata;
     },
@@ -28,7 +32,6 @@ export const authService = {
     async auth() {
         let res = await fetch('http://localhost:8000/api/auth', { credentials: 'include', mode: "cors", headers: { 'Content-Type': 'application/json' }, method: 'post' });
         res = await res.json();
-        console.log(res);
         store.dispatch(authSuccess(res));
     }
 };

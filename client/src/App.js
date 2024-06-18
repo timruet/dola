@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { authService } from './authService';
+import { domainService } from './domainService';
 import Cookies from 'js-cookie';
 
 
@@ -23,6 +24,16 @@ import Register from './Pages/Register';
 
 
 function App() {
+  authService.auth();
+  const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  let userid = null;
+  if(isAuthenticated){
+      userid = user.id;
+      domainService.getDomains(userid);
+  } 
+  const domains = useSelector((state) => state.domain.domains);
+
   return (
     <>
       {/* <Helmet>
@@ -33,10 +44,8 @@ function App() {
         {/* <Route path="/login" element={<Login/>} /> */}
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/domain/eldercare" element={<Vocabulary domain="eldercare" />} />
-        <Route path="/domain/construction" element={<Vocabulary domain="construction" />} />
-        <Route path="/domain/construction/quizz" element={<Quizz domain="construction" />} />
-        <Route path="/domain/eldercare/quizz" element={<Quizz domain="eldercare" />} />
+        <Route path="/domain/vocabulary" element={<Vocabulary />} />
+        <Route path="/domain/quizz" element={<Quizz domain="construction" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
@@ -46,10 +55,7 @@ function App() {
 
 function NavigationBar() {
   const navigate = useNavigate();
-  authService.auth();
-
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const user = useSelector((state) => state.auth.user);
 
   async function handleClick() {
     authService.logout();

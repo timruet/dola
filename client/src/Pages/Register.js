@@ -1,29 +1,32 @@
 import '../dist/output.css';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
+import { domainService } from '../domainService';
+import { vocabService } from '../vocabService';
 
 
 function isEmpty(obj) {
     return Object.keys(obj).length === 0;
-  }
+}
 
-export default function Register(){
-    const [error, setError] = useState({ email: null, password: null , confirmedPassword: null});
-    const [loginData, setLoginData] = useState({ email: '', password: ''});
+export default function Register() {
+    const [error, setError] = useState({ email: null, password: null, confirmedPassword: null });
     const navigate = useNavigate();
+    const domains = useSelector((state) => state.domain.domains);
 
     const validateEmail = (email) => {
         return String(email)
-          .toLowerCase()
-          .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          );
-      };
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
 
 
     async function handleSubmit(event) {
         event.preventDefault();
-        
+
         if (!validateEmail(event.target.email.value)) {
             setError({ email: 'Invalid Email', password: error.password, confirmedPassword: error.confirmedPassword });
         }
@@ -35,30 +38,29 @@ export default function Register(){
         if (event.target.confirmedPassword.value != event.target.password.value) {
             setError({ email: error.email, password: error.password, confirmedPassword: 'Passwords do not match' });
         }
-        
-        if (!isEmpty(error)){
-            setLoginData({ email: event.target.email.value, password: event.target.password.value })
-        }
-        //setState is asynchronous but doesnt return a promise or anything else and thus await doesnt always work
-        const userdata = { email: event.target.email.value, password: event.target.password.value };
-        let res = await fetch('http://localhost:8000/api/register', { mode: "cors", headers: {'Content-Type': 'application/json'}, method: 'post', body: JSON.stringify(userdata)});
-        console.log(res.status);
-        if(res.status == 200) {
-            res = await res.json();
-            console.log(res);
-            setError({ email: res, password: error.password, confirmedPassword: error.confirmedPassword });
-        }
-        else if(res.status == 201){
-            console.log(res.status);
-            navigate('/login');
-        }
-        else {
-            throw new Error(res.status);
+
+        if (!isEmpty(error)) {
+            //setState is asynchronous but doesnt return a promise or anything else and thus await doesnt always work
+            const userdata = { email: event.target.email.value, password: event.target.password.value };
+            let res = await fetch('http://localhost:8000/api/register', { credentials: 'include', mode: "cors", headers: { 'Content-Type': 'application/json' }, method: 'post', body: JSON.stringify(userdata) });
+            if (res.status == 200) {
+                res = await res.json();
+                setError({ email: res, password: error.password, confirmedPassword: error.confirmedPassword });
+            }
+            else if (res.status == 201) {
+                res = await res.json();
+                domainService.registerDomain(res.id);
+                domains.map((domain) => vocabService.setVocabulary(res.id, domain));
+                navigate('/login');
+            }
+            else {
+                throw new Error(res.status);
+            }
         }
     }
 
 
-    return(
+    return (
         <>
             <section className="bg-gray-50 dark:bg-gray-900">
                 <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">

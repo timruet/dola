@@ -16,11 +16,11 @@ const authSlice = createSlice({
     logoutSuccess: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      console.log(state.isAuthenticated);
     },
     authSuccess: (state, action) => {
-        if(state.isAuthenticated !== action.payload){
-            state.isAuthenticated = action.payload;
+        if(state.user !== action.payload.user && state.isAuthenticated !== action.payload.isAuthenticated){
+            state.user = action.payload.user;
+            state.isAuthenticated = action.payload.isAuthenticated;
         }
     }
   },
