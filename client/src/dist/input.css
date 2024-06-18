@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/*-------------------App--------------------*/
+*{ 
+  margin: 0;
+  padding: 0;
+  /* box-sizing: border-box; */
+}
+
+html{
+}
+
+body{
+  min-height: 100vh;
+  width: 100%;
+  background-color: rgb(249 250 251);
+}
+
+#root{
+  min-height: 100vh;
+}
+
+.Link{
+  text-decoration:none;
+  color: gray;
+}
+
+
+.brand{
+  text-decoration: none;
+  color: white;
+}
+
+
+
+/*-------------------Home--------------------*/
+
+
+
+/*-------------------Vocabulary--------------------*/
+
+.vocabTable{
+  position: absolute;
+  top: 55%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  overflow: auto;
+  display: block;
+  height: 550px;
+  width: 400px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+
+#learn{
+  position: absolute;
+  top: 10%;
+  left: 60%;
+}
+
+#domain-name{
+  font-size: 24px;
+}
+
+
+
+
+/*-------------------Quizz--------------------*/
+
+
+
+#study-background{
+  background-image: url("../images/study-background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+}
+
+.flip-card-container{
+  border: solid;
+  position: absolute;
+  background-color: transparent;
+  width: 560px;
+  height: 350px;
+  perspective: 1000px; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.flip-card {
+  background-color: transparent;
+  width: 80%;
+  height: 80%;
+  perspective: 1000px; 
+  position: absolute;
+  left: 50%; 
+  transform: translateX(-50%);
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /*Safari*/
+  backface-visibility: hidden;
+  font-size: 48px;
+  display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.flip-card-front {
+  background-color: #bbb;
+  color: black;
+}
+
+.flip-card-back {
+  background-color: black;
+  color: white;
+  transform: rotateY(180deg);
+}
+
+
+#next-button{
+  position: relative;
+  display: inline;
+  left: 90%;
+}
+
+#prev-button{
+  position: relative;
+  display: inline;
+  top: -45%;
+}
+
+#generate-example{
+  border: solid black 1px;
+  position: relative;
+  width: 80%;
+  min-height: 150px;
+}
+
+#example-sentence-form{
+  position: relative;
+  top: 30%;
+  padding: 3px;
+}
+
+#example-sentence{
+
+}
