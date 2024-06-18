@@ -1,13 +1,13 @@
 import OpenAI from "openai";
 import {} from 'dotenv/config'
 
-async function chatGPTCall(input)  {
+async function chatGPTCall(input_text)  {
     const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
     });
 
     const messages = [];
-    messages.push({ role: "user", content: input });
+    messages.push({ role: "user", content: input_text });
 
     const completion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",

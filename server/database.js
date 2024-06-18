@@ -88,6 +88,26 @@ async function getUserDomains(userid){
     return res;
 }
 
+async function setVocabulary(userid, domain, vocabulary){
+    const pool = new Pool({
+    host: 'localhost',
+    database: 'dola_db',
+    })
+    await pool.connect();
+
+    console.log(vocabulary[0]);
+    console.log(vocabulary.length);
+    await pool.query(`CREATE TABLE user_${userid}_${domain} (id serial not null, german varchar(255), english varchar(255));`);
+    for(let i=0; i<vocabulary.length; i++){
+        const germanWord = vocabulary[i].german;
+        const englishWord = vocabulary[i].english;
+        await pool.query(`INSERT INTO user_${userid}_${domain}(german, english) VALUES('${germanWord}', '${englishWord}');`);
+    }
+
+    const res =  await pool.query(`SELECT * FROM user_${userid}_${domain};`);
+    return res.rows;
+}
+
 // async function getRow(username, [password]){
 //     const pool = new Pool({
 //     host: 'localhost',
@@ -122,4 +142,4 @@ async function addUser(userdata){
     return user;
 }
 
-export{getTable, addUser, getUser, createUserDomains, addUserDomains, getUserDomains, deleteUserDomains};
+export{getTable, addUser, getUser, createUserDomains, addUserDomains, getUserDomains, deleteUserDomains, setVocabulary};

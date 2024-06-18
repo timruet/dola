@@ -4,14 +4,13 @@ import express from 'express';
 import * as path from 'path';
 import bodyParser from "body-parser";
 import { fileURLToPath } from 'url';
-import { getTable, addUser, getUser, addUserDomains, createUserDomains, getUserDomains, deleteUserDomains } from './database.js'
+import { getTable, addUser, getUser, addUserDomains, createUserDomains, getUserDomains, deleteUserDomains, setVocabulary } from './database.js'
 import cors from 'cors';
 import session from 'express-session';
 import passport from "passport";
 import LocalStrategy from "passport-local";
 import crypto from "crypto";
 import { ok } from 'assert';
-import { initPassport } from './auth.js';
 
 
 
@@ -82,6 +81,16 @@ app.post('/api/register', async function (req, res) {
     }  
   };
 });
+
+app.post('/api/setVocabulary', async function (req, res) {
+  const userid = req.body.userid;
+  const domain = req.body.domain;
+  const input_text = `Create a vocabulary list with the most important words for the domain of ${domain}. The list should be in JSON and each entry should contain the english word and the german translation. The list should contain exactly 50 words and no duplicates. German nouns should start with an uppercase letter. An example of such a list for the domain of Computer Science would be [{english: "computer", german: "Computer},{english: "algorithm", german: "Algorithmus"}].`;
+  const completion_text = await chatGPTCall(input_text);
+  const completion = JSON.parse(completion_text);
+  const vocab = await setVocabulary(userid, domain, completion);
+  res.json(vocab);
+  });
 
 app.post('/api/addUserDomains', async function (req, res) {
   const userid = req.body.userid;
