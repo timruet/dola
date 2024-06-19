@@ -4,7 +4,7 @@ import express from 'express';
 import * as path from 'path';
 import bodyParser from "body-parser";
 import { fileURLToPath } from 'url';
-import { getTable, addUser, getUser, addUserDomains, createUserDomains, getUserDomains, deleteUserDomains, setVocabulary } from './database.js'
+import { getTable, addUser, getUser, addUserDomains, createUserDomains, getUserDomains, deleteUserDomains, setVocabulary, getVocabulary, getVocabByID } from './database.js'
 import cors from 'cors';
 import session from 'express-session';
 import passport from "passport";
@@ -89,8 +89,15 @@ app.post('/api/setVocabulary', async function (req, res) {
   const completion_text = await chatGPTCall(input_text);
   const completion = JSON.parse(completion_text);
   const vocab = await setVocabulary(userid, domain, completion);
-  res.json(vocab);
+  res.json(vocab.rows);
   });
+
+  app.post('/api/getVocabulary', async function (req, res) {
+    const userid = req.body.userid;
+    const domain = req.body.domain;
+    const vocab = await getVocabulary(userid, domain);
+    res.json(vocab.rows);
+    });
 
 app.post('/api/addUserDomains', async function (req, res) {
   const userid = req.body.userid;
@@ -155,22 +162,24 @@ app.get('/api/table', async (req, res) => {
 
 
 
-app.get('/api/example', async (req, res) => {
-  const vocabID = req.query.id;
-  const domain = req.query.domain;
-  const vocab = await findByIdGerman(domain, vocabID);
-  console.log(vocab);
-  const completion_text = await chatGPTCall(`Gib mir einen Satz der das Wort ${vocab} enthält`);
-  res.json({ example: completion_text });
-});
+// app.get('/api/example', async (req, res) => {
+//   const vocabID = req.query.id;
+//   const domain = req.query.domain;
+//   const vocab = findByIdGerman(domain, vocabID);
+//   console.log(vocab);
+//   const completion_text = await chatGPTCall(`Gib mir einen Satz der das Wort ${vocab} enthält`);
+//   res.json({ example: completion_text });
+// });
 
 
-app.get('/api/quizz', async (req, res) => {
-  const domain = req.query.domain;
-  const vocabID = req.query.id;
-  const vocabGerman = await findByIdGerman(domain, vocabID);
-  const vocabEnglish = await findByIdEnglish(domain, vocabID);
-  res.json({ german: vocabGerman, english: vocabEnglish });
+app.post('/api/getVocabByID', async (req, res) => {
+  const domain = req.body.domain;
+  const vocabID = req.body.vocabID;
+  const userid = req.body.userid;
+  console.log(userid);
+  const data = await getVocabByID(userid, domain, vocabID);
+  const vocab = data.rows[0];
+  res.json(vocab);
 });
 
 
