@@ -2,3 +2,6 @@
 /server/node_modules
 /server/.env
 /GeneralInfo
+/.DS_Store
+client/.DS_Store
+server/.DS_Store

@@ -176,7 +176,6 @@ app.post('/api/getVocabByID', async (req, res) => {
   const domain = req.body.domain;
   const vocabID = req.body.vocabID;
   const userid = req.body.userid;
-  console.log(userid);
   const data = await getVocabByID(userid, domain, vocabID);
   const vocab = data.rows[0];
   res.json(vocab);
