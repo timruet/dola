@@ -1,7 +1,8 @@
 import { createSlice, current } from '@reduxjs/toolkit';
 
 const initialState = {
-    domains: ['Eldercare', 'Construction']
+    domains: ['Eldercare', 'Construction'],
+    domain: null
 };
 
 const compareArrays = (a, b) =>
@@ -30,9 +31,14 @@ const domainSlice = createSlice({
             if (!compareArrays(state.domains, action.payload)) {
                 state.domains = action.payload;
             }
+        },
+        setDomainSuccess: (state, action) => {
+            if (state.domain != action.payload) {
+                state.domain = action.payload;
+            }
         }
     }
 });
 
-export const { addDomainSuccess, registerDomainSuccess, getDomainSuccess, deleteDomainSuccess } = domainSlice.actions;
+export const { addDomainSuccess, registerDomainSuccess, getDomainSuccess, deleteDomainSuccess, setDomainSuccess } = domainSlice.actions;
 export default domainSlice.reducer;

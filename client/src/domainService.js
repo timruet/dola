@@ -1,4 +1,4 @@
-import { registerDomainSuccess, getDomainSuccess, addDomainSuccess, deleteDomainSuccess } from './domainSlice';
+import { registerDomainSuccess, getDomainSuccess, addDomainSuccess, deleteDomainSuccess, setDomainSuccess } from './domainSlice';
 import { useNavigate } from 'react-router-dom';
 import { store } from './store'
 
@@ -35,5 +35,9 @@ export const domainService = {
         }
         res = await res.json();
         store.dispatch(getDomainSuccess(res));
+    },
+
+    async setDomain(domain) {
+        store.dispatch(setDomainSuccess(domain));
     },
 };

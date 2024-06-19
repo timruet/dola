@@ -2,6 +2,7 @@ import '../dist/output.css';
 import volcano from "../images/volcano-cropped.png"
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '@heroicons/react/16/solid';
 import { useSelector, useDispatch } from 'react-redux'
 import { authService } from '../authService';
@@ -30,6 +31,7 @@ export default function Home() {
 
 function DomainsSelect() {
 
+    const navigate = useNavigate();
     const user = useSelector((state) => state.auth.user);
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     let userid = null;
@@ -60,6 +62,12 @@ function DomainsSelect() {
         }  
     }
 
+    function handleClick(event, domain) {
+        event.preventDefault();
+        domainService.setDomain(domain); 
+        navigate(`/vocabulary/${domain}`);
+    }
+
     return (
         <div className="relative w-fit h-fit max-w-md">
             <div className="relative bg-white shadow-md rounded-lg px-3 py-2 w-96">
@@ -86,7 +94,7 @@ function DomainsSelect() {
                     {domains.map(domain => (
                         <div key={domain} className="flex py-2">
                             <span className="bg-gray-400 h-2 w-2 m-2 rounded-full"></span>
-                            <a href={`domain/${domain}/vocabulary`.toLowerCase()} className="text-gray-700 hover:text-blue-400">
+                            <a href={`/vocabulary/${domain}`.toLowerCase()} onClick={(event) => handleClick(event, domain)} className="text-gray-700 hover:text-blue-400">
                                 <span className="relative top-[2px] w-fit font-medium px-2">{domain}</span>
                             </a>
                             <button type="button" onClick={(event) => handleRemove(event, domain)} className="top-[2px] ml-auto cursor-pointer text-gray-700 hover:text-blue-400 rounded-md px-1 py-1"><TrashIcon className="h-[16px] w-[16px]" /></button>

@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import '../dist/output.css';
+import { useParams } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux'
+import { vocabService } from '../vocabService';
 
 
-export default function Quizz({ domain }) {
+export default function Quizz() {
+    const param = useParams();
+    const domain = param.domain;
     return (
         <>
-            <Flashcard domain={domain} />
+            <Flashcard domain={domain}/>
         </>
     );
 }
 
 
-function Flashcard({ domain }) {
+function Flashcard({domain}) {
     const [vocabID, setVocabID] = useState(1);
     const [vocabGerman, setVocabGerman] = useState('');
     const [vocabEnglish, setVocabEnglish] = useState('');
     const [mode, setMode] = useState(0);
+
+    const user = useSelector((state) => state.auth.user);
+    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+    let userid = null;
+    if (isAuthenticated) {
+        userid = user.id
+    }
 
     // useEffect(() => {
     //     async function fetchData() {
@@ -29,13 +41,13 @@ function Flashcard({ domain }) {
     // }, []);
 
     async function handleClick() {
-        const res = await fetch(`http://localhost:8000/api/quizz?id=${vocabID}&domain=${domain}`);
-        const data = await res.json();
+        const data = await vocabService.getVocabByID(userid, domain, vocabID);
+        console.log(data.english);
         setVocabID(vocabID + 1);
         setVocabGerman(data.german);
         setVocabEnglish(data.english);
     }
-    console.log(vocabID);
+
 
 
     return (
@@ -49,25 +61,26 @@ function Flashcard({ domain }) {
                         {vocabGerman}
                     </button>}
             </div>
-            <Example domain={domain} vocabID={vocabID}/>
+            <button onClick={handleClick} >Next</button>
+            {/* <Example domain={domain} vocabID={vocabID}/> */}
         </>
     );
 }
-function Example({ domain, vocabID }) {
-    const [example, setExample] = React.useState('');
+// function Example({ domain, vocabID }) {
+//     const [example, setExample] = React.useState('');
 
-    async function handleClick() {
-        const res = await fetch(`http://localhost:8000/api/example?id=${vocabID}&domain=${domain}`);
-        const data = await res.json();
-        setExample(data.example);
-    }
+//     async function handleClick() {
+//         const res = await fetch(`http://localhost:8000/api/example?id=${vocabID}&domain=${domain}`);
+//         const data = await res.json();
+//         setExample(data.example);
+//     }
 
-    return (
-        <div className="relative w-[600px] h-[120px] border-gray-800 border-4 top-[12%] -translate-x-1/2 left-1/2">
-            <button className="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2 mr-2 mb-2" onClick={handleClick}>Generate</button>
-            <div>
-                {example}
-            </div>
-        </div>
-    )
-}
+//     return (
+//         <div className="relative w-[600px] h-[120px] border-gray-800 border-4 top-[12%] -translate-x-1/2 left-1/2">
+//             <button className="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2 mr-2 mb-2" onClick={handleClick}>Generate</button>
+//             <div>
+//                 {example}
+//             </div>
+//         </div>
+//     )
+// }

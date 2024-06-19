@@ -33,6 +33,7 @@ function App() {
       domainService.getDomains(userid);
   } 
   const domains = useSelector((state) => state.domain.domains);
+  const domain = useSelector((state) => state.domain.domain);
 
   return (
     <>
@@ -44,8 +45,8 @@ function App() {
         {/* <Route path="/login" element={<Login/>} /> */}
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/domain/vocabulary" element={<Vocabulary />} />
-        <Route path="/domain/quizz" element={<Quizz domain="construction" />} />
+        <Route path='/vocabulary/:domain' element={<Vocabulary />} />
+        <Route path="/quizz/:domain" element={<Quizz />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
