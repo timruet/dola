@@ -2,9 +2,9 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './authSlice'; 
 import domainReducer from './domainSlice'; 
 
-const initialState = {
-  domain: { domains: ['Eldercare', 'Construction'] },
-}
+// const initialState = {
+//   domain: { domains: ['Eldercare', 'Construction'] },
+// }
 
 export const store = configureStore({
   reducer: {

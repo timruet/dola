@@ -1,11 +1,9 @@
 import '../dist/output.css';
 import volcano from "../images/volcano-cropped.png"
 
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TrashIcon } from '@heroicons/react/16/solid';
-import { useSelector, useDispatch } from 'react-redux'
-import { authService } from '../authService';
+import { useSelector} from 'react-redux'
 import { domainService } from '../domainService';
 import { vocabService } from '../vocabService';
 
@@ -115,7 +113,7 @@ function Logo() {
     return (
         <div className="relative w-fit h-fit">
             <div className="text-center">
-                <img src={volcano} className="h-28 mr-3 inline-block" />
+                <img src={volcano} alt="volcanoImage" className="h-28 mr-3 inline-block" />
                 <span className="text-8xl font-semibold text-white align-middle inline-block">dola</span>
             </div>
             <span className="align-middle text-xl font-semibold text-white block p-3">domain specific language learning</span>

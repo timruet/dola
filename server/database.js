@@ -4,16 +4,16 @@ import { resolve } from 'path';
 const {Pool, Client} = pkg;
 
 
-async function createTable(userid){
-    const pool = new Client({
-    host: 'localhost',
-    database: 'dola_db',
-    })
+// async function createTable(userid){
+//     const pool = new Client({
+//     host: 'localhost',
+//     database: 'dola_db',
+//     })
 
-    await pool.connect();
-    await pool.query(`CREATE TABLE user_${userid}(domains varchar(255));`);
+//     await pool.connect();
+//     await pool.query(`CREATE TABLE user_${userid}(domains varchar(255));`);
 
-}
+// }
 
 async function addCSV(){
     const pool = new Pool({

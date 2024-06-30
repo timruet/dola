@@ -1,5 +1,3 @@
-import { useNavigate, useSelector } from 'react-router-dom';
-import { store } from './store'
 
 
 export const vocabService = {

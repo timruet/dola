@@ -1,17 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Routes, Route } from 'react-router-dom';
-import { NavLink, useNavigate } from 'react-router-dom';
 import volcano from "./images/volcano-cropped.png"
-import { Helmet } from 'react-helmet';
-import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { authService } from './authService';
 import { domainService } from './domainService';
-import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 
 import './dist/output.css';
@@ -32,8 +25,6 @@ function App() {
       userid = user.id;
       domainService.getDomains(userid);
   } 
-  const domains = useSelector((state) => state.domain.domains);
-  const domain = useSelector((state) => state.domain.domain);
 
   return (
     <>
@@ -68,7 +59,7 @@ function NavigationBar() {
         <nav className="bg-gray-800 shadow-md top-0 left-0 w-screen">
           <div className="relative max-w-screen-xl flex flex-wrap items-center justify-start mx-auto p-3 w-screen">
             <a href="/home" className="flex items-center hover:bg-gray-700 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-              <img src={volcano} className="h-6 mr-3" />
+              <img src={volcano} alt="volcanoImage" className="h-6 mr-3" />
               <span className="self-center text-xl font-semibold whitespace-nowrap text-white ">dola</span>
             </a>
             <a href="/register" className="flex items-center  hover:bg-gray-700 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
@@ -88,7 +79,7 @@ function NavigationBar() {
         <nav className="bg-gray-800 shadow-md top-0 left-0 w-screen">
           <div className="relative max-w-screen-xl flex flex-wrap items-center justify-start mx-auto p-3 w-screen">
             <a href="/home" className="flex items-center hover:bg-gray-700 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-              <img src={volcano} className="h-6 mr-3" />
+              <img src={volcano} alt=" volcanoImage" className="h-6 mr-3" />
               <span className="self-center text-xl font-semibold whitespace-nowrap text-white ">dola</span>
             </a>
             <a href="/home" onClick={handleClick} className="flex items-center  hover:bg-gray-700 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">

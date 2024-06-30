@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../dist/output.css';
 import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { vocabService } from '../vocabService';
 
 
@@ -29,21 +29,15 @@ function Flashcard({domain}) {
         userid = user.id
     }
 
-    // useEffect(() => {
-    //     async function fetchData() {
-    //         const res = await fetch(`http://localhost:8000/api/quizz?id=${vocabID}&domain=${domain}`);
-    //         const data = await res.json();
-    //         setVocabID(vocabID + 1);
-    //         setVocabGerman(data.german);
-    //         setVocabEnglish(data.english);
-    //     }
-    //     fetchData();
-    // }, []);
-
-    async function handleClick() {
+    async function handleClick(description) {
+        setMode(0);
+        if(description === "next" && vocabID < 50){
+            setVocabID(vocabID + 1);
+        }
+        else if(description === "previous" && vocabID > 0){
+            setVocabID(vocabID - 1);
+        }
         const data = await vocabService.getVocabByID(userid, domain, vocabID);
-        console.log(data.english);
-        setVocabID(vocabID + 1);
         setVocabGerman(data.german);
         setVocabEnglish(data.english);
     }
@@ -51,8 +45,9 @@ function Flashcard({domain}) {
 
 
     return (
-        <>
-            <div className="relative w-[560px] h-[350px] top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute flex left-1/2 top-1/2 -translate-x-1/2 translate-y-1/2 items-center "> 
+        <button onClick={() => handleClick("next")} className="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2 m-2">Previous</button>
+            <div className="w-[560px] h-[350px] ">
                 {mode === 0 ?
                     <button onClick={() => setMode(1)} className=" text-7xl w-full h-full relative rounded bg-gray-800 text-white">
                         {vocabEnglish}
@@ -61,9 +56,9 @@ function Flashcard({domain}) {
                         {vocabGerman}
                     </button>}
             </div>
-            <button onClick={handleClick} >Next</button>
+            <button onClick={() => handleClick("previous")} className="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2 m-2" >Next</button>
             {/* <Example domain={domain} vocabID={vocabID}/> */}
-        </>
+        </div>
     );
 }
 // function Example({ domain, vocabID }) {

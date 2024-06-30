@@ -1,5 +1,4 @@
 import { registerDomainSuccess, getDomainSuccess, addDomainSuccess, deleteDomainSuccess, setDomainSuccess } from './domainSlice';
-import { useNavigate } from 'react-router-dom';
 import { store } from './store'
 
 

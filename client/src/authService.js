@@ -1,5 +1,4 @@
 import { loginSuccess, logoutSuccess, authSuccess } from './authSlice';
-import { useNavigate } from 'react-router-dom';
 import { store } from './store'
 
 

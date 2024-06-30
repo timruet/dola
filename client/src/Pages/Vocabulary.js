@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../dist/output.css';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { vocabService } from '../vocabService';
-import { domainService } from '../domainService';
 
 
 
@@ -42,7 +41,7 @@ function VocabTable() {
       }
     }
     fetchData();
-  }, []);
+  }, [userid, domain]);
 
   function handleClick(){
     navigate(`/quizz/${domain}?domain=${domain}`.toLowerCase());
@@ -57,7 +56,7 @@ function VocabTable() {
               <tr className="p-3 border-b-8 bg-gray-200">
                 <th className="bg-gray-50 rounded-lg">
                   <button className="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2 mr-2 mb-2">
-                    <a href="#" className="">Edit</a>
+                    <a href={`/vocabulary/${domain}`} className="">Edit</a>
                   </button>
                   <button className="text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-2 mr-2 mb-2">
                     <a href={`/quizz/${domain}`} onClick={handleClick} className="">Study</a>

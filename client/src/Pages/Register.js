@@ -1,7 +1,7 @@
 import '../dist/output.css';
 import { useState } from 'react';
 import { useNavigate} from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { domainService } from '../domainService';
 import { vocabService } from '../vocabService';
 
@@ -35,7 +35,7 @@ export default function Register() {
             setError({ email: error.email, password: 'Password must be at least 8 characters long', confirmedPassword: error.confirmedPassword });
         }
 
-        if (event.target.confirmedPassword.value != event.target.password.value) {
+        if (event.target.confirmedPassword.value !== event.target.password.value) {
             setError({ email: error.email, password: error.password, confirmedPassword: 'Passwords do not match' });
         }
 
@@ -43,11 +43,11 @@ export default function Register() {
             //setState is asynchronous but doesnt return a promise or anything else and thus await doesnt always work
             const userdata = { email: event.target.email.value, password: event.target.password.value };
             let res = await fetch('http://localhost:8000/api/register', { credentials: 'include', mode: "cors", headers: { 'Content-Type': 'application/json' }, method: 'post', body: JSON.stringify(userdata) });
-            if (res.status == 200) {
+            if (res.status === 200) {
                 res = await res.json();
                 setError({ email: res, password: error.password, confirmedPassword: error.confirmedPassword });
             }
-            else if (res.status == 201) {
+            else if (res.status === 201) {
                 res = await res.json();
                 domainService.registerDomain(res.id);
                 domains.map((domain) => vocabService.setVocabulary(res.id, domain));
@@ -94,7 +94,7 @@ export default function Register() {
                                             <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">I accept the Terms and Conditions</label>
                                         </div>
                                     </div>
-                                    <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+                                    <a href="/register" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
                                 </div>
                                 <button type="submit" className="w-full text-black bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign in</button>
                                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">

@@ -1,4 +1,4 @@
-import { createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     domains: ['Eldercare', 'Construction'],
@@ -33,7 +33,7 @@ const domainSlice = createSlice({
             }
         },
         setDomainSuccess: (state, action) => {
-            if (state.domain != action.payload) {
+            if (state.domain !== action.payload) {
                 state.domain = action.payload;
             }
         }
